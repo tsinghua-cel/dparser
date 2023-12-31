@@ -3,12 +3,12 @@ package v1
 import (
 	"crypto/ecdsa"
 	"crypto/rand"
-	"dparser/types"
 	"encoding/hex"
 	"errors"
 	"github.com/libp2p/go-libp2p/core/crypto"
 	"github.com/libp2p/go-libp2p/core/peer"
 	ecdsaprysm "github.com/prysmaticlabs/prysm/v4/crypto/ecdsa"
+	"github.com/tsinghua-cel/dparser/types"
 	"log"
 )
 

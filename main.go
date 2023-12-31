@@ -1,12 +1,12 @@
 package main
 
 import (
-	"dparser/compose"
-	"dparser/types"
-	v1 "dparser/v1"
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/tsinghua-cel/dparser/compose"
+	"github.com/tsinghua-cel/dparser/types"
+	v1 "github.com/tsinghua-cel/dparser/v1"
 	"io/ioutil"
 	"log"
 	"os"

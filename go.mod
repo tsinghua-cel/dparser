@@ -1,4 +1,4 @@
-module dparser
+module github.com/tsinghua-cel/dparser
 
 go 1.18
 

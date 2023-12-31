@@ -2,9 +2,9 @@ package compose
 
 import (
 	"bytes"
-	"dparser/types"
-	v1 "dparser/v1"
 	"fmt"
+	"github.com/tsinghua-cel/dparser/types"
+	v1 "github.com/tsinghua-cel/dparser/v1"
 	"log"
 	"os"
 	"text/template"
