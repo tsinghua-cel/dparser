@@ -1,6 +1,8 @@
 package main
 
 import (
+	"dparser/compose"
+	"dparser/types"
 	v1 "dparser/v1"
 	"encoding/json"
 	"flag"
@@ -12,7 +14,8 @@ import (
 )
 
 var (
-	fileName = flag.String("file", "description.json", "description file name")
+	fileName        = flag.String("file", "description.json", "description file name")
+	composeFileName = flag.String("out", "docker-compose.yml", "out put docker compose file")
 )
 
 func main() {
@@ -21,11 +24,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to read description file: %v", err)
 	}
-	description := new(v1.Description)
+	description := new(types.Description)
 	if err = json.Unmarshal(descriptionData, description); err != nil {
 		log.Fatalf("Failed to unmarshal description data: %v", err)
 	}
-	if err = description.Validate(); err != nil {
+	if err = v1.ValidateDescription(*description); err != nil {
 		log.Fatalf("Failed to validate description data: %v", err)
 	}
 	// generate Dockerfile
@@ -111,5 +114,9 @@ func main() {
 	buildScript.Close()
 
 	// generate docker-compose.yml
+	if err := compose.BuildCompose(*description, *composeFileName); err != nil {
+		log.Fatalf("Failed to build compose: %v", err)
+	}
+	log.Println("build compose success")
 
 }

@@ -14,46 +14,11 @@ import (
 
 type P2PInfo struct {
 	PrivateKey *ecdsa.PrivateKey
+	IP         int
 	P2PId      peer.ID
 }
 
-type Validator struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
-	Beacon  string `json:"beacon"`
-}
-
-type Beacon struct {
-	Name     string   `json:"name"`
-	Version  string   `json:"version"`
-	Executor string   `json:"executor"`
-	MaxPeers int      `json:"max-peers"`
-	Peers    []string `json:"peers"`
-	P2PKey   string   `json:"p2p-key"`
-}
-
-type Execute struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
-}
-
-type Config struct {
-	TotalTime int `json:"total-time"` // seconds time to run the test.
-}
-
-type Topology struct {
-	Executor   []Execute   `json:"executors"`
-	Beacons    []Beacon    `json:"beacons"`
-	Validators []Validator `json:"validators"`
-}
-
-type Description struct {
-	Version  string   `json:"version"`
-	Config   Config   `json:"config"`
-	Topology Topology `json:"topology"`
-}
-
-func (d Description) Validate() error {
+func ValidateDescription(d types.Description) error {
 	cached := make(map[string]interface{})
 	for _, e := range d.Topology.Executor {
 		if e.Name == "" {
@@ -120,8 +85,9 @@ func (d Description) Validate() error {
 	return nil
 }
 
-func (d Description) GetBeaconP2PInfo() map[string]P2PInfo {
+func GetBeaconP2PInfo(d types.Description) map[string]P2PInfo {
 	p2pInfo := make(map[string]P2PInfo)
+	ipbase := 2
 	for _, beacon := range d.Topology.Beacons {
 		var privkey = new(ecdsa.PrivateKey)
 		if beacon.P2PKey == "" {
@@ -141,7 +107,9 @@ func (d Description) GetBeaconP2PInfo() map[string]P2PInfo {
 		p2pInfo[beacon.Name] = P2PInfo{
 			PrivateKey: privkey,
 			P2PId:      id,
+			IP:         ipbase,
 		}
+		ipbase++
 	}
 	return p2pInfo
 }
