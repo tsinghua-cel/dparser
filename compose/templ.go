@@ -44,6 +44,7 @@ networks:
       - ALLPEERS={{ .BeaconPeers }}
       - EXECUTE={{ .ExecuteName }}
       - MAXPEERS={{ .BeaconMaxPeers }}
+      - P2PKEY={{ .BeaconP2PKey }}
     deploy:
       restart_policy:
         condition: on-failure
@@ -100,6 +101,7 @@ type BeaconConfig struct {
 	BeaconDataPath string
 	ExecuteName    string
 	BeaconMaxPeers int
+	BeaconP2PKey   string
 }
 
 type ValidatorConfig struct {
