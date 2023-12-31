@@ -43,6 +43,7 @@ func BuildCompose(d types.Description, output string) error {
 		config.BeaconDataPath = fmt.Sprintf("%s", beacon.Name)
 		config.BeaconIP = fmt.Sprintf("172.99.1.%d", beaconP2pinfo[beacon.Name].IP)
 		config.ExecuteName = beacon.Executor
+		config.BeaconMaxPeers = beacon.MaxPeers
 		for _, peer := range beacon.Peers {
 			// --peer /ip4/172.99.1.1/tcp/13000/p2p/16Uiu2HAmHwS8xvw3T5nMKW6Cq9drWKov2P7fcFECq59d6U86dM59
 			config.BeaconPeers += fmt.Sprintf(" --peer /ip4/172.99.1.%d/tcp/13000/p2p/%s ", beaconP2pinfo[peer].IP, beaconP2pinfo[peer].P2PId)

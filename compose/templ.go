@@ -43,6 +43,7 @@ networks:
     environment:
       - ALLPEERS={{ .BeaconPeers }}
       - EXECUTE={{ .ExecuteName }}
+      - MAXPEERS={{ .BeaconMaxPeers }}
     deploy:
       restart_policy:
         condition: on-failure
@@ -98,6 +99,7 @@ type BeaconConfig struct {
 	BeaconPeers    string
 	BeaconDataPath string
 	ExecuteName    string
+	BeaconMaxPeers int
 }
 
 type ValidatorConfig struct {
