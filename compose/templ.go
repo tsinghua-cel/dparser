@@ -66,8 +66,8 @@ networks:
     container_name: {{ .ValidatorName }}
     entrypoint: /usr/local/bin/validator.sh
     environment:
-      - VALIDATORS_NUM= {{ .ValidatorNum }}
-      - VALIDATORS_INDEX= {{ .ValidatorStartIndex }}
+      - VALIDATORS_NUM={{ .ValidatorNum }}
+      - VALIDATORS_INDEX={{ .ValidatorStartIndex }}
       - BEACONRPC={{ .BeaconName }}:4000
     deploy:
       restart_policy:
