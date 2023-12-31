@@ -1,0 +1,22 @@
+FROM golang:1.20-alpine AS base
+
+# Set up dependencies
+ENV PACKAGES git openssh-client build-base
+
+WORKDIR /build
+
+RUN git clone -b {{ .Version }} --single-branch https://github.com/tsinghua-cel/prysm.git
+
+FROM base AS build
+
+RUN  cd /build/prysm && go build -o /validator ./cmd/validator
+
+FROM ubuntu:22.04
+
+WORKDIR /root
+
+COPY  --from=build /validator /usr/bin/validator
+COPY ./scripts/validator.sh /usr/local/bin/validator.sh
+RUN chmod u+x /usr/local/bin/validator.sh
+
+ENTRYPOINT [ "/usr/local/bin/validator.sh" ]

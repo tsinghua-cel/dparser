@@ -1,0 +1,22 @@
+FROM golang:1.20-alpine AS base
+
+# Set up dependencies
+ENV PACKAGES git openssh-client build-base
+
+WORKDIR /build
+
+RUN git clone -b {{ .Version }} --single-branch https://github.com/tsinghua-cel/go-ethereum.git
+
+FROM base AS build
+
+RUN  cd /build/go-ethereum && make geth && cp /build/go-ethereum/build/bin/geth /geth
+
+FROM ubuntu:22.04
+
+WORKDIR /root
+
+COPY  --from=build /geth /usr/bin/beacon-chain
+COPY ./scripts/beacon-node.sh /usr/local/bin/beacon-node.sh
+RUN chmod u+x /usr/local/bin/beacon-node.sh
+
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]

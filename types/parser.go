@@ -1,5 +1,7 @@
 package types
 
+import "crypto/ecdsa"
+
 type BaseModule interface {
 	Name() string
 	Version() string
@@ -15,6 +17,7 @@ type BeaconDes interface {
 	Peers() []string
 	MaxPeers() int
 	P2PKey() string
+	SetP2PKey(*ecdsa.PrivateKey)
 	P2PId() string
 }
 
