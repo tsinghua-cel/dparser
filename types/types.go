@@ -1,10 +1,11 @@
 package types
 
 type Validator struct {
-	Name    string                 `json:"name"`
-	Version string                 `json:"version"`
-	Beacon  string                 `json:"beacon"`
-	Env     map[string]interface{} `json:"env"`
+	Name           string                 `json:"name"`
+	Version        string                 `json:"version"`
+	Beacon         string                 `json:"beacon"`
+	ValidatorCount int                    `json:"validator_count"`
+	Env            map[string]interface{} `json:"env"`
 }
 
 type Beacon struct {

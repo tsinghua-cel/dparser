@@ -38,7 +38,8 @@
                 "version": "v4.1.1-base",
                 "executor": "execute-1",
                 "peers": ["beacon-vals-2", "beacon-vals-3", "beacon-8"],
-                "max-peers": 3
+                "max-peers": 3,
+                "env": {"ATTACKER_BLOCK_BROADCAST_DELAY_TS": "3"}
             },
             {
                 "name": "beacon-vals-2",
@@ -58,8 +59,7 @@
                 "name": "beacon-vals-4",
                 "version": "v4.1.1-base",
                 "executor": "execute-4",
-                "peers": ["beacon-9", "beacon-vals-5", "beacon-vals-6"],
-                "max-peers": 3
+                "max-peers": 0
             },
             {
                 "name": "beacon-vals-5",
@@ -112,6 +112,7 @@
             {
                 "name": "validator-2",
                 "version": "v4.1.1-base",
+                "validator_count": 1,
                 "beacon": "beacon-vals-2"
             },
             {
@@ -122,6 +123,7 @@
             {
                 "name": "validator-4",
                 "version": "v4.1.1-base",
+                "validator_count": 5,
                 "beacon": "beacon-vals-4"
             },
             {

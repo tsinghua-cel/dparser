@@ -83,25 +83,17 @@ func BuildCompose(d types.Description, output string) error {
 		}
 	}
 
-	// build all validator
-	nodeCount := len(d.Topology.Validators)
-	for idx, validator := range d.Topology.Validators {
-		index := idx
-		step := totalValidators / nodeCount
-		startIndex := index * step
-		endIndex := startIndex + step - 1
-		if index == nodeCount-1 {
-			endIndex = totalValidators - 1
-		}
-		validatorsNum := endIndex - startIndex + 1
+	dispatchIndex, dispatchNum := dispatchValidators(d.Topology.Validators)
+
+	for _, validator := range d.Topology.Validators {
 
 		var config ValidatorConfig
 		config.ValidatorName = validator.Name
 		config.ValidatorImage = fmt.Sprintf("validator:%s", validator.Version)
 		config.BeaconName = validator.Beacon
 		config.ValidatorDataPath = fmt.Sprintf("%s", validator.Name)
-		config.ValidatorNum = validatorsNum
-		config.ValidatorStartIndex = startIndex
+		config.ValidatorNum = dispatchNum[validator.Name]
+		config.ValidatorStartIndex = dispatchIndex[validator.Name]
 
 		var envstr = ""
 		for key, v := range validator.Env {
@@ -137,4 +129,54 @@ func leftPadding(str string, length int) string {
 		return str
 	}
 	return leftPadding("0"+str, length)
+}
+
+func dispatchValidators(validators []types.Validator) (map[string]int, map[string]int) {
+	totalValidators := 64
+	totalNode := len(validators)
+
+	certainValidators := make(map[string]int)
+	sumCertainValidators := 0
+	for _, v := range validators {
+		if v.ValidatorCount > 0 {
+			certainValidators[v.Name] = v.ValidatorCount
+			sumCertainValidators += v.ValidatorCount
+		}
+	}
+
+	// 计算剩余的验证者数量
+	remainingValidators := totalValidators - sumCertainValidators
+
+	// 计算剩余的人数
+	remainingNode := totalNode - len(certainValidators)
+
+	// 平均分配剩余的验证者数量
+	averageVals := remainingValidators / remainingNode
+	remainingValidators %= remainingNode
+
+	// 记录当前的验证者索引
+	currentValIndex := 0
+
+	// 记录每个节点得到的验证者数和索引
+	dispatchIndex := make(map[string]int)
+	dispatchNum := make(map[string]int)
+	for _, v := range validators {
+		if num, ok := certainValidators[v.Name]; ok {
+			dispatchIndex[v.Name] = currentValIndex
+			dispatchNum[v.Name] = num
+			currentValIndex += num
+		} else {
+			if remainingNode == 1 {
+				dispatchIndex[v.Name] = currentValIndex
+				dispatchNum[v.Name] = averageVals + remainingValidators
+				currentValIndex += averageVals + remainingValidators
+			} else {
+				dispatchIndex[v.Name] = currentValIndex
+				dispatchNum[v.Name] = averageVals
+				currentValIndex += averageVals
+			}
+			remainingNode--
+		}
+	}
+	return dispatchIndex, dispatchNum
 }
