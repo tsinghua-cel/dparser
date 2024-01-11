@@ -105,7 +105,7 @@ func BuildCompose(d types.Description, output string) error {
 
 		var envstr = ""
 		for key, v := range validator.Env {
-			envstr += fmt.Sprintf(" - %s=%s \n", key, v)
+			envstr += fmt.Sprintf("- %s=%s\n", key, v)
 		}
 		config.ValidatorEnv = envstr
 
