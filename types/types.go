@@ -1,18 +1,20 @@
 package types
 
 type Validator struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
-	Beacon  string `json:"beacon"`
+	Name    string                 `json:"name"`
+	Version string                 `json:"version"`
+	Beacon  string                 `json:"beacon"`
+	Env     map[string]interface{} `json:"env"`
 }
 
 type Beacon struct {
-	Name     string   `json:"name"`
-	Version  string   `json:"version"`
-	Executor string   `json:"executor"`
-	MaxPeers int      `json:"max-peers"`
-	Peers    []string `json:"peers"`
-	P2PKey   string   `json:"p2p-key"`
+	Name     string                 `json:"name"`
+	Version  string                 `json:"version"`
+	Executor string                 `json:"executor"`
+	MaxPeers int                    `json:"max-peers"`
+	Peers    []string               `json:"peers"`
+	P2PKey   string                 `json:"p2p-key"`
+	Env      map[string]interface{} `json:"env"`
 }
 
 type Execute struct {

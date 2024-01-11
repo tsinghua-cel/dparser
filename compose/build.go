@@ -66,6 +66,11 @@ func BuildCompose(d types.Description, output string) error {
 			// --peer /ip4/172.99.1.1/tcp/13000/p2p/16Uiu2HAmHwS8xvw3T5nMKW6Cq9drWKov2P7fcFECq59d6U86dM59
 			config.BeaconPeers += fmt.Sprintf(" --peer /ip4/172.99.1.%d/tcp/13000/p2p/%s ", beaconP2pinfo[peer].IP, beaconP2pinfo[peer].P2PId)
 		}
+		var envstr = ""
+		for key, v := range beacon.Env {
+			envstr += fmt.Sprintf(" - %s=%s \n", key, v)
+		}
+		config.BeaconEnv = envstr
 
 		tmpl, err := template.New("test").Parse(beaconTmpl)
 		if err != nil {
@@ -97,6 +102,12 @@ func BuildCompose(d types.Description, output string) error {
 		config.ValidatorDataPath = fmt.Sprintf("%s", validator.Name)
 		config.ValidatorNum = validatorsNum
 		config.ValidatorStartIndex = startIndex
+
+		var envstr = ""
+		for key, v := range validator.Env {
+			envstr += fmt.Sprintf(" - %s=%s \n", key, v)
+		}
+		config.ValidatorEnv = envstr
 
 		tmpl, err := template.New("test").Parse(validatorTmpl)
 		if err != nil {

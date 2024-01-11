@@ -45,6 +45,7 @@ networks:
       - EXECUTE={{ .ExecuteName }}
       - MAXPEERS={{ .BeaconMaxPeers }}
       - P2PKEY={{ .BeaconP2PKey }}
+      {{ .BeaconEnv }}
     deploy:
       restart_policy:
         condition: on-failure
@@ -69,6 +70,7 @@ networks:
       - VALIDATORS_NUM={{ .ValidatorNum }}
       - VALIDATORS_INDEX={{ .ValidatorStartIndex }}
       - BEACONRPC={{ .BeaconName }}:4000
+      {{ .ValidatorEnv }}
     deploy:
       restart_policy:
         condition: on-failure
@@ -102,6 +104,7 @@ type BeaconConfig struct {
 	ExecuteName    string
 	BeaconMaxPeers int
 	BeaconP2PKey   string
+	BeaconEnv      string
 }
 
 type ValidatorConfig struct {
@@ -111,4 +114,5 @@ type ValidatorConfig struct {
 	ValidatorStartIndex int
 	ValidatorDataPath   string
 	BeaconName          string
+	ValidatorEnv        string
 }
