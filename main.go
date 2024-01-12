@@ -37,6 +37,31 @@ func main() {
 		log.Fatalf("Failed to open build.sh: %v", err)
 	}
 
+	// 1. generate Dockerfile for each attacker
+	{
+		attackerDockTml, err := template.ParseFiles("templates/attacker.Dockerfile.tmpl")
+		if err != nil {
+			log.Fatalf("Failed to parse attacker.Dockerfile.tmpl: %v", err)
+		}
+		braches := make(map[string]bool)
+		for _, attacker := range description.Topology.Attackers {
+			if _, ok := braches[attacker.Version]; ok {
+				continue
+			}
+			fs, err := os.OpenFile(fmt.Sprintf("generated/attacker.Dockerfile.%s", attacker.Version), os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				log.Fatalf("Failed to open attacker.Dockerfile.%s: %v", attacker.Version, err)
+			}
+
+			if err = attackerDockTml.Execute(fs, attacker); err != nil {
+				log.Fatalf("Failed to execute geth.Dockerfile.tmpl: %v", err)
+			}
+			fs.Close()
+			braches[attacker.Version] = true
+			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t attacker:%s -f generated/attacker.Dockerfile.%s .\n", attacker.Version, attacker.Version))
+		}
+	}
+
 	// 1. generate Dockerfile for each execute
 	{
 		gethDockTml, err := template.ParseFiles("templates/geth.Dockerfile.tmpl")
@@ -58,7 +83,7 @@ func main() {
 			}
 			fs.Close()
 			braches[execute.Version] = true
-			buildScript.WriteString(fmt.Sprintf("docker build -t geth:%s -f generated/geth.Dockerfile.%s .\n", execute.Version, execute.Version))
+			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t geth:%s -f generated/geth.Dockerfile.%s .\n", execute.Version, execute.Version))
 		}
 	}
 
@@ -83,7 +108,7 @@ func main() {
 			}
 			fs.Close()
 			braches[beacon.Version] = true
-			buildScript.WriteString(fmt.Sprintf("docker build -t beacon:%s -f generated/beacon.Dockerfile.%s .\n", beacon.Version, beacon.Version))
+			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t beacon:%s -f generated/beacon.Dockerfile.%s .\n", beacon.Version, beacon.Version))
 		}
 
 	}
@@ -108,7 +133,7 @@ func main() {
 			}
 			fs.Close()
 			braches[validator.Version] = true
-			buildScript.WriteString(fmt.Sprintf("docker build -t validator:%s -f generated/validator.Dockerfile.%s .\n", validator.Version, validator.Version))
+			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t validator:%s -f generated/validator.Dockerfile.%s .\n", validator.Version, validator.Version))
 		}
 	}
 	buildScript.Close()

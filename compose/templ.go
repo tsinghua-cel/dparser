@@ -85,6 +85,26 @@ networks:
     networks:
       - meta
 `
+	attackerTmpl = `
+  {{ .AttackerName}}:
+    image: {{ .AttackerImage }}
+    container_name: {{ .AttackerName }}
+    entrypoint: /usr/local/bin/attacker.sh
+    environment:
+      - NAME={{ .AttackerName }}
+      {{ .AttackerEnv }}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 1s
+        max_attempts: 100
+        window: 120s
+    volumes:
+      - ./config/attacker-config.toml:/root/config.toml
+      - ./data/{{ .AttackerDataPath }}:/root/attackerdata
+    networks:
+      - meta
+`
 )
 
 type ExecuteConfig struct {
@@ -115,4 +135,11 @@ type ValidatorConfig struct {
 	ValidatorDataPath   string
 	BeaconName          string
 	ValidatorEnv        string
+}
+
+type AttackerConfig struct {
+	AttackerName     string
+	AttackerImage    string
+	AttackerDataPath string
+	AttackerEnv      string
 }

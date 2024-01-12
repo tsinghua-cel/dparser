@@ -139,8 +139,15 @@
             {
                 "name": "validator-7",
                 "version": "v4.1.1-base",
-                "beacon": "beacon-vals-7"
+                "beacon": "beacon-vals-7",
+                "env": {
+                    "ATTACKER_SERVICE_URL": "http://attacker-1:9999"
+                }
             }
-        ]
+        ],
+        "attackers": [{
+            "name": "attacker-1",
+            "version": "v0.0.1"
+        }]
     }
 }

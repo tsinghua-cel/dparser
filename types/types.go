@@ -23,6 +23,12 @@ type Execute struct {
 	Version string `json:"version"`
 }
 
+type Attacker struct {
+	Name    string                 `json:"name"`
+	Version string                 `json:"version"`
+	Env     map[string]interface{} `json:"env"`
+}
+
 type Config struct {
 	TotalTime int `json:"total-time"` // seconds time to run the test.
 }
@@ -31,6 +37,7 @@ type Topology struct {
 	Executor   []Execute   `json:"executors"`
 	Beacons    []Beacon    `json:"beacons"`
 	Validators []Validator `json:"validators"`
+	Attackers  []Attacker  `json:"attackers"`
 }
 
 type Description struct {

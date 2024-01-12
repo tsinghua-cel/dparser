@@ -35,6 +35,28 @@ func BuildCompose(d types.Description, output string) error {
 		}
 	}
 
+	for _, attacker := range d.Topology.Attackers {
+		var config AttackerConfig
+		config.AttackerName = attacker.Name
+		config.AttackerImage = fmt.Sprintf("attacker:%s", attacker.Version)
+		config.AttackerDataPath = fmt.Sprintf("%s", attacker.Name)
+
+		var envstr = ""
+		for key, v := range attacker.Env {
+			envstr += fmt.Sprintf("- %s=%s \n", key, v)
+		}
+		config.AttackerEnv = envstr
+
+		tmpl, err := template.New("test").Parse(attackerTmpl)
+		if err != nil {
+			panic(err)
+		}
+		err = tmpl.Execute(buffer, config)
+		if err != nil {
+			log.Fatalf("Failed to execute executeTmpl: %v", err)
+		}
+	}
+
 	// build all beacon
 	// prepare some default config.
 	var allPeers = make([]string, 0, len(d.Topology.Beacons))
