@@ -45,7 +45,7 @@ networks:
       - EXECUTE={{ .ExecuteName }}
       - MAXPEERS={{ .BeaconMaxPeers }}
       - P2PKEY={{ .BeaconP2PKey }}
-      {{ .BeaconEnv }}
+{{ .BeaconEnv }}
     deploy:
       restart_policy:
         condition: on-failure
@@ -70,7 +70,7 @@ networks:
       - VALIDATORS_NUM={{ .ValidatorNum }}
       - VALIDATORS_INDEX={{ .ValidatorStartIndex }}
       - BEACONRPC={{ .BeaconName }}:4000
-      {{ .ValidatorEnv }}
+{{ .ValidatorEnv }}
     deploy:
       restart_policy:
         condition: on-failure
@@ -92,7 +92,7 @@ networks:
     entrypoint: /usr/local/bin/attacker.sh
     environment:
       - NAME={{ .AttackerName }}
-      {{ .AttackerEnv }}
+{{ .AttackerEnv }}
     deploy:
       restart_policy:
         condition: on-failure

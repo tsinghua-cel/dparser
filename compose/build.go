@@ -43,7 +43,7 @@ func BuildCompose(d types.Description, output string) error {
 
 		var envstr = ""
 		for key, v := range attacker.Env {
-			envstr += fmt.Sprintf("- %s=%s \n", key, v)
+			envstr += fmt.Sprintf("      - %s=%s \n", key, v)
 		}
 		config.AttackerEnv = envstr
 
@@ -90,7 +90,7 @@ func BuildCompose(d types.Description, output string) error {
 		}
 		var envstr = ""
 		for key, v := range beacon.Env {
-			envstr += fmt.Sprintf("- %s=%s \n", key, v)
+			envstr += fmt.Sprintf("      - %s=%s \n", key, v)
 		}
 		config.BeaconEnv = envstr
 
@@ -119,7 +119,7 @@ func BuildCompose(d types.Description, output string) error {
 
 		var envstr = ""
 		for key, v := range validator.Env {
-			envstr += fmt.Sprintf("- %s=%s\n", key, v)
+			envstr += fmt.Sprintf("      - %s=%s\n", key, v)
 		}
 		config.ValidatorEnv = envstr
 
