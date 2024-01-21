@@ -114,6 +114,16 @@ func GetBeaconP2PInfo(d types.Description) map[string]P2PInfo {
 	return p2pInfo
 }
 
+func GetAttackerIPInfo(d types.Description) map[string]int {
+	ipInfo := make(map[string]int)
+	ipbase := 150
+	for _, attacker := range d.Topology.Attackers {
+		ipInfo[attacker.Name] = ipbase
+		ipbase++
+	}
+	return ipInfo
+}
+
 func GetP2PKeyFromHex(hexKey string) (*ecdsa.PrivateKey, error) {
 	dst := make([]byte, hex.DecodedLen(len(hexKey)))
 	_, err := hex.Decode(dst, []byte(hexKey))

@@ -24,9 +24,11 @@ type Execute struct {
 }
 
 type Attacker struct {
-	Name    string                 `json:"name"`
-	Version string                 `json:"version"`
-	Env     map[string]interface{} `json:"env"`
+	Name     string                 `json:"name"`
+	Version  string                 `json:"version"`
+	Config   string                 `json:"config"`
+	Strategy string                 `json:"strategy"`
+	Env      map[string]interface{} `json:"env"`
 }
 
 type Config struct {

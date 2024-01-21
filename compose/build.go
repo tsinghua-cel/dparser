@@ -12,11 +12,13 @@ import (
 
 func BuildCompose(d types.Description, output string) error {
 	beaconP2pinfo := v1.GetBeaconP2PInfo(d)
+	attackerIpInfo := v1.GetAttackerIPInfo(d)
+
 	buffer := bytes.NewBufferString("")
 	buffer.WriteString(composeHeader)
 	// build all execute
 	baseExecuteAuthPort := 10000
-	baseExecuteRPCPort := 20000
+	baseExecuteRPCPort := 11000
 	for idx, execute := range d.Topology.Executor {
 		var config ExecuteConfig
 		config.ExecuteName = execute.Name
@@ -35,11 +37,18 @@ func BuildCompose(d types.Description, output string) error {
 		}
 	}
 
-	for _, attacker := range d.Topology.Attackers {
+	baseAttackerPort := 12000
+	baseBeaconGrpcPort := 13000
+	baseBeaconGrpcGwPort := 14000
+	for idx, attacker := range d.Topology.Attackers {
 		var config AttackerConfig
 		config.AttackerName = attacker.Name
 		config.AttackerImage = fmt.Sprintf("attacker:%s", attacker.Version)
 		config.AttackerDataPath = fmt.Sprintf("%s", attacker.Name)
+		config.AttackerIP = fmt.Sprintf("172.99.1.%d", attackerIpInfo[attacker.Name])
+		config.AttackerPort = baseAttackerPort + idx
+		config.AttackerConfig = attacker.Config
+		config.AttackerStrategy = attacker.Strategy
 
 		var envstr = ""
 		for key, v := range attacker.Env {
@@ -64,13 +73,15 @@ func BuildCompose(d types.Description, output string) error {
 		allPeers = append(allPeers, beacon.Name)
 	}
 	var defaultMaxPeers = 70
-	for _, beacon := range d.Topology.Beacons {
+	for idx, beacon := range d.Topology.Beacons {
 		var config BeaconConfig
 		config.BeaconName = beacon.Name
 		config.BeaconImage = fmt.Sprintf("beacon:%s", beacon.Version)
 		config.BeaconDataPath = fmt.Sprintf("%s", beacon.Name)
 		config.BeaconIP = fmt.Sprintf("172.99.1.%d", beaconP2pinfo[beacon.Name].IP)
 		config.ExecuteName = beacon.Executor
+		config.BeaconGrpcPort = baseBeaconGrpcPort + idx
+		config.BeaconGrpcGwPort = baseBeaconGrpcGwPort + idx
 		config.BeaconMaxPeers = beacon.MaxPeers
 		if config.BeaconMaxPeers == 0 {
 			config.BeaconMaxPeers = defaultMaxPeers

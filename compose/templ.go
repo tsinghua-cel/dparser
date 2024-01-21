@@ -52,6 +52,9 @@ networks:
         delay: 1s
         max_attempts: 100
         window: 120s
+    ports:
+      - "{{ .BeaconGrpcPort }}:4000"
+      - "{{ .BeaconGrpcGwPort }}:3500"
     volumes:
       - ./config:/root/config
       - ./data/{{ .BeaconDataPath }}:/root/beacondata
@@ -99,11 +102,15 @@ networks:
         delay: 1s
         max_attempts: 100
         window: 120s
+    ports:
+      - "{{ .AttackerPort }}:10000"
     volumes:
-      - ./config/attacker-config.toml:/root/config.toml
+      - ./config/{{ .AttackerConfig }}:/root/config.toml
+      - ./{{ .AttackerStrategy }}:/root/strategy.json
       - ./data/{{ .AttackerDataPath }}:/root/attackerdata
     networks:
-      - meta
+      meta:
+        ipv4_address: {{ .AttackerIP }}
 `
 )
 
@@ -116,15 +123,17 @@ type ExecuteConfig struct {
 }
 
 type BeaconConfig struct {
-	BeaconName     string
-	BeaconImage    string
-	BeaconIP       string
-	BeaconPeers    string
-	BeaconDataPath string
-	ExecuteName    string
-	BeaconMaxPeers int
-	BeaconP2PKey   string
-	BeaconEnv      string
+	BeaconName       string
+	BeaconImage      string
+	BeaconIP         string
+	BeaconPeers      string
+	BeaconDataPath   string
+	ExecuteName      string
+	BeaconMaxPeers   int
+	BeaconP2PKey     string
+	BeaconEnv        string
+	BeaconGrpcPort   int
+	BeaconGrpcGwPort int
 }
 
 type ValidatorConfig struct {
@@ -142,4 +151,8 @@ type AttackerConfig struct {
 	AttackerImage    string
 	AttackerDataPath string
 	AttackerEnv      string
+	AttackerPort     int
+	AttackerConfig   string
+	AttackerIP       string
+	AttackerStrategy string
 }
