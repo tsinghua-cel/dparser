@@ -105,8 +105,8 @@ networks:
     ports:
       - "{{ .AttackerPort }}:10000"
     volumes:
-      - ./config/{{ .AttackerConfig }}:/root/config.toml
-      - ./{{ .AttackerStrategy }}:/root/strategy.json
+      - {{ .AttackerConfig }}:/root/config.toml
+      - {{ .AttackerStrategy }}:/root/strategy.json
       - ./data/{{ .AttackerDataPath }}:/root/attackerdata
     networks:
       meta:
