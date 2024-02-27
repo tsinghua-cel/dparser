@@ -36,6 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to open build.sh: %v", err)
 	}
+	buildScript.WriteString(fmt.Sprintf("export  DOCKER_BUILDKIT=1\n"))
 
 	// 1. generate Dockerfile for each attacker
 	{
@@ -58,7 +59,7 @@ func main() {
 			}
 			fs.Close()
 			braches[attacker.Version] = true
-			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t attacker:%s -f generated/attacker.Dockerfile.%s .\n", attacker.Version, attacker.Version))
+			buildScript.WriteString(fmt.Sprintf("docker build -t attacker:%s -f generated/attacker.Dockerfile.%s .\n", attacker.Version, attacker.Version))
 		}
 	}
 
@@ -83,7 +84,7 @@ func main() {
 			}
 			fs.Close()
 			braches[execute.Version] = true
-			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t geth:%s -f generated/geth.Dockerfile.%s .\n", execute.Version, execute.Version))
+			buildScript.WriteString(fmt.Sprintf("docker build -t geth:%s -f generated/geth.Dockerfile.%s .\n", execute.Version, execute.Version))
 		}
 	}
 
@@ -133,7 +134,7 @@ func main() {
 			}
 			fs.Close()
 			braches[validator.Version] = true
-			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t validator:%s -f generated/validator.Dockerfile.%s .\n", validator.Version, validator.Version))
+			buildScript.WriteString(fmt.Sprintf("docker build -t validator:%s -f generated/validator.Dockerfile.%s .\n", validator.Version, validator.Version))
 		}
 	}
 	buildScript.Close()
