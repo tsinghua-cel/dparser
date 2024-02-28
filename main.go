@@ -109,7 +109,7 @@ func main() {
 			}
 			fs.Close()
 			braches[beacon.Version] = true
-			buildScript.WriteString(fmt.Sprintf("docker build --no-cache -t beacon:%s -f generated/beacon.Dockerfile.%s .\n", beacon.Version, beacon.Version))
+			buildScript.WriteString(fmt.Sprintf("docker build -t beacon:%s -f generated/beacon.Dockerfile.%s .\n", beacon.Version, beacon.Version))
 		}
 
 	}
