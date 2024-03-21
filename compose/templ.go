@@ -15,6 +15,24 @@ networks:
       config:
         - subnet: 172.99.0.0/16
 `
+	mysqlTmpl = `
+  mysql:
+    container_name: "eth-mysql"
+    image: "mysql:latest"
+    ports:
+      - "3306:3306"
+    restart: always
+    expose:
+      - 33306
+    privileged: true
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "./data/mysql/data:/var/lib/mysql"
+      - "./config/mysql/conf/my.cnf:/etc/my.cnf"
+      - "./config/mysql/init:/docker-entrypoint-initdb.d/"
+    networks:
+      - meta
+`
 	executeTmpl = `
   {{ .ExecuteName }}:
     image: {{ .ExecuteImage }}

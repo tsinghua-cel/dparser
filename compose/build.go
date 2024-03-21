@@ -16,6 +16,7 @@ func BuildCompose(d types.Description, output string) error {
 
 	buffer := bytes.NewBufferString("")
 	buffer.WriteString(composeHeader)
+	buffer.WriteString(mysqlTmpl)
 	// build all execute
 	baseExecuteAuthPort := 10000
 	baseExecuteRPCPort := 11000
