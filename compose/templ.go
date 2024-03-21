@@ -22,8 +22,6 @@ networks:
     ports:
       - "3306:3306"
     restart: always
-    expose:
-      - 33306
     privileged: true
     volumes:
       - "/etc/localtime:/etc/localtime"
