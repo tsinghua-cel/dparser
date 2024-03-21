@@ -17,7 +17,7 @@ networks:
 `
 	mysqlTmpl = `
   mysql:
-    container_name: "eth-mysql"
+    container_name: "ethmysql"
     image: "mysql:latest"
     ports:
       - "3306:3306"
@@ -124,6 +124,8 @@ networks:
       - {{ .AttackerConfig }}:/root/config.toml
       - {{ .AttackerStrategy }}:/root/strategy.json
       - ./data/{{ .AttackerDataPath }}:/root/attackerdata
+	depends_on:
+      - ethmysql
     networks:
       meta:
         ipv4_address: {{ .AttackerIP }}
