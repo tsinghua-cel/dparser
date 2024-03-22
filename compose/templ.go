@@ -19,6 +19,8 @@ networks:
   mysql:
     container_name: "ethmysql"
     image: "mysql:latest"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
     ports:
       - "3306:3306"
     restart: always
@@ -124,8 +126,8 @@ networks:
       - {{ .AttackerConfig }}:/root/config.toml
       - {{ .AttackerStrategy }}:/root/strategy.json
       - ./data/{{ .AttackerDataPath }}:/root/attackerdata
-	depends_on:
-      - ethmysql
+    depends_on:
+      - mysql
     networks:
       meta:
         ipv4_address: {{ .AttackerIP }}
