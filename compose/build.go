@@ -48,6 +48,7 @@ func BuildCompose(d types.Description, output string) error {
 		config.AttackerDataPath = fmt.Sprintf("%s", attacker.Name)
 		config.AttackerIP = fmt.Sprintf("172.99.1.%d", attackerIpInfo[attacker.Name])
 		config.AttackerPort = baseAttackerPort + idx
+		config.SwagPort = baseAttackerPort + idx + 100
 		config.AttackerConfig = attacker.Config
 		config.AttackerStrategy = attacker.Strategy
 

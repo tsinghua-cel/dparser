@@ -122,6 +122,7 @@ networks:
         window: 120s
     ports:
       - "{{ .AttackerPort }}:10000"
+      - "{{ .SwagPort }}:10001"
     volumes:
       - {{ .AttackerConfig }}:/root/config.toml
       - {{ .AttackerStrategy }}:/root/strategy.json
@@ -172,6 +173,7 @@ type AttackerConfig struct {
 	AttackerDataPath string
 	AttackerEnv      string
 	AttackerPort     int
+	SwagPort         int
 	AttackerConfig   string
 	AttackerIP       string
 	AttackerStrategy string
