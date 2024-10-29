@@ -1,8 +1,7 @@
 package compose
 
 var (
-	totalValidators = 64
-	composeHeader   = `
+	composeHeader = `
 version: "3.9"
 
 services:`

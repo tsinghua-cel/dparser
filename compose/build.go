@@ -7,6 +7,7 @@ import (
 	v1 "github.com/tsinghua-cel/dparser/v1"
 	"log"
 	"os"
+	"strconv"
 	"text/template"
 )
 
@@ -193,7 +194,16 @@ func leftPadding(str string, length int) string {
 }
 
 func dispatchValidators(validators []types.Validator) (map[string]int, map[string]int) {
-	totalValidators := 64
+	env := os.Getenv("TOTAL_VALIDATOR_NUM")
+	if env == "" {
+		panic("need TOTAL_VALIDATOR_NUM")
+	}
+
+	totalValidators, err := strconv.Atoi(env)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to parse TOTAL_VALIDATOR_NUM: %v", err))
+	}
+
 	totalNode := len(validators)
 
 	certainValidators := make(map[string]int)
@@ -210,10 +220,15 @@ func dispatchValidators(validators []types.Validator) (map[string]int, map[strin
 
 	// 计算剩余的人数
 	remainingNode := totalNode - len(certainValidators)
+	var averageVals = 0
 
 	// 平均分配剩余的验证者数量
-	averageVals := remainingValidators / remainingNode
-	remainingValidators %= remainingNode
+	if remainingValidators > 0 && remainingNode <= 0 {
+		panic("Not enough node to dispatch remaining validators")
+	} else if remainingValidators > 0 {
+		averageVals = remainingValidators / remainingNode
+		remainingValidators %= remainingNode
+	}
 
 	// 记录当前的验证者索引
 	currentValIndex := 0
