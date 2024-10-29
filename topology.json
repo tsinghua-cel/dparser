@@ -151,6 +151,13 @@
             "version": "v0.0.1",
             "config": "./config/attacker-config.toml",
             "strategy": "./config/strategy-1.json"
+        }],
+        "generators": [{
+            "name": "generator-1",
+            "version": "v0.0.1",
+            "attacker": "attacker-1",
+            "max-attacker-index": 84,
+            "case": "staircase"
         }]
     }
 }

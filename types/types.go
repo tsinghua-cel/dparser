@@ -31,6 +31,15 @@ type Attacker struct {
 	Env      map[string]interface{} `json:"env"`
 }
 
+type Generator struct {
+	Name             string                 `json:"name"`
+	Version          string                 `json:"version"`
+	Attacker         string                 `json:"attacker"`
+	MaxAttackerIndex int                    `json:"max-attacker-index"`
+	Case             string                 `json:"case"`
+	Env              map[string]interface{} `json:"env"`
+}
+
 type Config struct {
 	TotalTime int `json:"total-time"` // seconds time to run the test.
 }
@@ -40,6 +49,7 @@ type Topology struct {
 	Beacons    []Beacon    `json:"beacons"`
 	Validators []Validator `json:"validators"`
 	Attackers  []Attacker  `json:"attackers"`
+	Generators []Generator `json:"generators"`
 }
 
 type Description struct {

@@ -133,6 +133,28 @@ networks:
       meta:
         ipv4_address: {{ .AttackerIP }}
 `
+	generatorTml = `
+  {{ .GeneratorName}}:
+    image: {{ .GeneratorImage }}
+    container_name: {{ .GeneratorName }}
+    entrypoint: strategy runtime --log /root/strategydata/d.log --attacker {{ .AttackerName }}:10001 --max-validator-index={{ .MaxAttackerIndex }} --strategy {{ .GeneratorCase }}
+    environment:
+      - NAME={{ .GeneratorName }}
+{{ .GeneratorEnv }}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 1s
+        max_attempts: 100
+        window: 120s
+    volumes:
+      - ./config:/root/config
+      - ./data/{{ .GeneratorDataPath }}:/root/strategydata
+    depends_on:
+      - {{ .AttackerName }}
+    networks:
+      - meta
+`
 )
 
 type ExecuteConfig struct {
@@ -177,4 +199,14 @@ type AttackerConfig struct {
 	AttackerConfig   string
 	AttackerIP       string
 	AttackerStrategy string
+}
+
+type GeneratorConfig struct {
+	GeneratorName     string
+	GeneratorImage    string
+	GeneratorDataPath string
+	GeneratorEnv      string
+	AttackerName      string
+	MaxAttackerIndex  int
+	GeneratorCase     string
 }

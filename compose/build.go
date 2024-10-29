@@ -147,6 +147,32 @@ func BuildCompose(d types.Description, output string) error {
 		}
 	}
 
+	for _, generator := range d.Topology.Generators {
+
+		var config GeneratorConfig
+		config.GeneratorName = generator.Name
+		config.GeneratorImage = fmt.Sprintf("generator:%s", generator.Version)
+		config.AttackerName = generator.Attacker
+		config.GeneratorDataPath = fmt.Sprintf("%s", generator.Name)
+		config.MaxAttackerIndex = generator.MaxAttackerIndex
+		config.GeneratorCase = generator.Case
+		var envstr = ""
+		for key, v := range generator.Env {
+			envstr += fmt.Sprintf("      - %s=%s\n", key, v)
+		}
+		config.GeneratorEnv = envstr
+
+		tmpl, err := template.New("test").Parse(generatorTml)
+		if err != nil {
+			panic(err)
+		}
+
+		err = tmpl.Execute(buffer, config)
+		if err != nil {
+			log.Fatalf("Failed to execute generatorTml: %v", err)
+		}
+	}
+
 	buffer.WriteString(composeNetwork)
 
 	fs, err := os.OpenFile(output, os.O_CREATE|os.O_WRONLY, 0644)
